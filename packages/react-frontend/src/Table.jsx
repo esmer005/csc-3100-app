@@ -1,13 +1,13 @@
 // src/Table.jsx
 import React from "react";
 
-
 function TableHeader() {
   return (
     <thead>
       <tr>
         <th>Name</th>
         <th>Job</th>
+        <th>Remove</th>
       </tr>
     </thead>
   );
@@ -24,13 +24,9 @@ function TableBody(props) {
             </td>
         </tr>
         );
-    }
-);
-  return (
-    <tbody>
-        {rows}
-        </tbody>
-    );
+});
+
+  return (<tbody>{rows}</tbody>);
 }
 
 function Table(props) {
@@ -38,12 +34,11 @@ function Table(props) {
         <table>
             <TableHeader />
             <TableBody 
-            characterData={props.characterData} 
-            removeCharacter={props.removeCharacter} 
+                characterData={props.characterData} 
+                removeCharacter={props.removeCharacter} 
             />
         </table>
     );
 }
-
 
 export default Table;
