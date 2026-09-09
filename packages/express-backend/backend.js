@@ -17,21 +17,54 @@ const findUserByName = (name) => {
 const findUserById = (id) =>
   users["users_list"].find((user) => user["id"] === id);
 
+
+//CREATE DELETE
+const deleteUserById = (id) => {
+    const index = users["users_list"].findIndex((user) => user["id"] === id);
+    if (index !== -1) {
+        users["users_list"].splice(index, 1);
+        return true;
+    }
+    return false;
+};
+
+app.delete("/users/:id", (req, res) => {
+    const id = req.params["id"];
+    const deleted = deleteUserById(id);
+    if (deleted) {
+        res.sendStatus(204); // No Content
+    } else {
+        res.status(404).send("Resource not found.");
+    }
+});
+
+//Get all users that match given name and job
+const findUserByNameAndJob = (name, job) => {
+  return users["users_list"].filter(
+    (user) => user["name"] === name && user["job"] === job
+  );
+};
+
 app.get("/users", (req, res) => {
-  const name = req.query.name;
-  if (name != undefined) {
-    let result = findUserByName(name);
-    result = { users_list: result };
-    res.send(result);
-  } else {
-    res.send(users);
-  }
+    const name = req.query.name;
+    const job = req.query.job;
+    if (name != undefined && job != undefined) {
+        let result = findUserByNameAndJob(name, job);
+        result = { users_list: result };
+        res.send(result);
+    }else if (name != undefined) {
+        let result = findUserByName(name);
+        result = { users_list: result };
+        res.send(result);
+    } else {
+        res.send(users);
+    }
 });
 
 app.get("/users/:id", (req, res) => {
-  const id = req.params["id"]; //or req.params.id
-  let result = findUserById(id);
-  if (result === undefined) {
+  const id = req.params["id"];
+  const result = findUserById(id);
+  if (result == undefined) {
     res.status(404).send("Resource not found.");
   } else {
     res.send(result);
@@ -70,9 +103,9 @@ const users = {
       job: "Bartender",
     },
     {
-  "id": "qwe123",
-  "job": "Zookeeper",
-  "name": "Cindy"
+      "id": "qwe123",
+      "name": "Cindy",
+      "job": "Zookeeper"
 }
   ],
 };
