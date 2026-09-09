@@ -10,8 +10,23 @@ app.get("/", (req, res) => {
   res.send("Hello World!"); 
 });
 
+const findUserByName = (name) => {
+  return users["users_list"].filter((user) => user["name"] === name);
+};
+
 const findUserById = (id) =>
   users["users_list"].find((user) => user["id"] === id);
+
+app.get("/users", (req, res) => {
+  const name = req.query.name;
+  if (name != undefined) {
+    let result = findUserByName(name);
+    result = { users_list: result };
+    res.send(result);
+  } else {
+    res.send(users);
+  }
+});
 
 app.get("/users/:id", (req, res) => {
   const id = req.params["id"]; //or req.params.id
@@ -54,6 +69,20 @@ const users = {
       name: "Dennis",
       job: "Bartender",
     },
+    {
+  "id": "qwe123",
+  "job": "Zookeeper",
+  "name": "Cindy"
+}
   ],
 };
+const addUser = (user) => {
+  users["users_list"].push(user);
+  return user;
+};
 
+app.post("/users", (req, res) => {
+  const userToAdd = req.body;
+  addUser(userToAdd);
+  res.send();
+});
